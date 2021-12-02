@@ -1,0 +1,23 @@
+# Для парсинга данных с внешнего сайта мною был написан следующий код: 
+
+
+import requests 
+from bs4 import BeautifulSoup
+import pandas as pd
+
+URL = 'https://####.html'
+req = requests.get(URL).text
+
+soup = BeautifulSoup(req, 'lxml')
+
+columns = []
+for string in soup.find_all('th'):
+    columns.append(string.text)
+
+data = []
+for row  in soup.find_all('tr'):
+    if not row.find_all('th'):
+        data.append([element.text for element in row.find_all('td')])
+        
+festivals = pd.DataFrame(columns = columns, data = data)
+print(festivals)
